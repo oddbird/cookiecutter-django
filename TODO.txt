@@ -1,0 +1,5 @@
+ - Add CircleCI
+ - Add JS
+ - Add Docker
+ - Review configuration
+ - Try it out

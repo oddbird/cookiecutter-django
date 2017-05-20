@@ -1,0 +1,17 @@
+{
+    "project_name": "Project Name",
+    "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_') }}",
+    "author_name": "Oddbird",
+    "email": "birds@oddbird.net",
+    "description": "A short description of the project.",
+    "domain_name": "example.com",
+    "version": "0.1.0",
+    "timezone": "UTC",
+    "use_whitenoise": "y",
+    "use_docker": "y",
+    "use_heroku": "y",
+    "use_sentry_for_error_reporting": "y",
+    "postgresql_version": ["9.6"],
+    "js_task_runner": ["Gulp"],
+    "open_source_license": ["MIT", "BSD", "GPLv3", "Apache Software License 2.0", "Not open source"]
+}
