@@ -12,14 +12,11 @@ Copy the ``.env`` file::
 You can also edit ``.env``, if you have any values that you know should
 be different.
 
-Build::
-
-    docker-compose build
-   
-Do the database thing::
-
-    docker-compose run django python src/manage.py migrate
-
 Run::
 
     docker-compose up
+
+If you've made changes and they're not showing up, you may need to force
+a rebuild of the Docker images::
+
+    docker-compose build --nocache

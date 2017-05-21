@@ -3,27 +3,18 @@ FROM python:3.6
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH src
 
-RUN groupadd -r django \
-    && useradd -r -g django django
-
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
     && rm -f /requirements.txt
 
-COPY ./compose/django/gunicorn.sh ./compose/django/entrypoint.sh /
-RUN sed -i 's/\r//' /entrypoint.sh \
-    && sed -i 's/\r//' /gunicorn.sh \
-    && chmod +x /entrypoint.sh \
-    && chown django /entrypoint.sh \
-    && chmod +x /gunicorn.sh \
-    && chown django /gunicorn.sh
+COPY ./compose/django/entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r//' /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-COPY . /app
-
-RUN chown -R django /app
-
-USER django
+COPY ./compose/django/start-dev.sh /start-dev.sh
+RUN sed -i 's/\r//' /start-dev.sh
+RUN chmod +x /start-dev.sh
 
 WORKDIR /app
 

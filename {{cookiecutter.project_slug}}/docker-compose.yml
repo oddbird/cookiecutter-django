@@ -19,8 +19,10 @@ services:
     depends_on:
       - postgres
       - redis
-    command: /gunicorn.sh
+    command: /start-dev.sh
     env_file: .env
+    volumes:
+      - .:/app
 
   nginx:
     build: ./compose/nginx
