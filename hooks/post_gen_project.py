@@ -93,93 +93,55 @@ def remove_file(file_name):
         os.remove(file_name)
 
 
-def remove_task_app(project_directory):
-    """Removes the taskapp if celery isn't going to be used"""
-    # Determine the local_setting_file_location
-    task_app_location = os.path.join(
-        PROJECT_DIRECTORY,
-        '{{ cookiecutter.project_slug }}/taskapp'
-    )
-    shutil.rmtree(task_app_location)
-
-
-def remove_pycharm_dir(project_directory):
-    """
-    Removes directories related to PyCharm
-    if it isn't going to be used
-    """
-    idea_dir_location = os.path.join(PROJECT_DIRECTORY, '.idea/')
-    if os.path.exists(idea_dir_location):
-        shutil.rmtree(idea_dir_location)
-
-    docs_dir_location = os.path.join(PROJECT_DIRECTORY, 'docs/pycharm/')
-    if os.path.exists(docs_dir_location):
-        shutil.rmtree(docs_dir_location)
+def remove_files(file_names):
+    for file_name in file_names:
+        file_name = os.path.join(PROJECT_DIRECTORY, file_name)
+        remove_file(file_name)
 
 
 def remove_heroku_files():
     """
     Removes files needed for heroku if it isn't going to be used
     """
-    filenames = ["Procfile", "runtime.txt"]
-    filenames.append("requirements.txt")
-    for filename in ["Procfile", "runtime.txt"]:
-        file_name = os.path.join(PROJECT_DIRECTORY, filename)
-        remove_file(file_name)
+    remove_files(["Procfile", "runtime.txt"])
 
 
 def remove_docker_files():
     """
     Removes files needed for docker if it isn't going to be used
     """
-    for filename in ["dev.yml", "docker-compose.yml", ".dockerignore"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
-
-    shutil.rmtree(os.path.join(
-        PROJECT_DIRECTORY, "compose"
-    ))
+    remove_files(["dev.yml", "docker-compose.yml", ".dockerignore"])
+    shutil.rmtree(os.path.join(PROJECT_DIRECTORY, "compose"))
 
 
 def remove_gulp_files():
     """
     Removes files needed for Gulp if it isn't going to be used
     """
-    for filename in ["gulpfile.js"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
-
-
-def remove_packageJSON_file():
-    """
-    Removes files needed for gulp if it isn't going to be used
-    """
-    for filename in ["package.json"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
+    remove_files([
+        "gulpfile.js",
+        "package.json",
+        "karma.common.conf.js",
+        "karma.conf.js",
+        "webpack.common.config.js",
+        "webpack.config.js",
+        "webpack.prod.config.js",
+        "postcss.config.js",
+    ])
 
 
 def remove_copying_files():
     """
     Removes files needed for the GPLv3 licence if it isn't going to be used
     """
-    for filename in ["COPYING"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
+    remove_files(["COPYING"])
 
 
 def remove_open_source_files():
     """
     Removes files conventional to opensource projects only.
     """
-    for filename in ["CONTRIBUTORS.txt"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
+    remove_files(["CONTRIBUTORS.rst", "CONTRIBUTING.rst"])
 
 
 use_gulp = '{{ cookiecutter.js_task_runner }}'.lower() == 'gulp'
@@ -202,7 +164,6 @@ if not use_docker:
 # 4. Removes all JS task manager files if it isn't going to be used
 if not use_gulp:
     remove_gulp_files()
-    remove_packageJSON_file()
 
 # 5. Display a warning if use_docker and use_gulp are selected. Gulp isn't
 #   supported by our docker config atm.
@@ -215,7 +176,7 @@ if use_gulp and use_docker:
     )
 
 # 6. Removes files needed for the GPLv3 licence if it isn't going to be used.
-if use_gplv3:
+if not use_gplv3:
     remove_copying_files()
 
 # 7. Remove files conventional to opensource projects only.
