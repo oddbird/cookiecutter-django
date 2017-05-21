@@ -1,5 +1,7 @@
  - Add CircleCI
  - Add JS
- - Add Docker
- - Review configuration
- - Try it out
+ - Add django-channels
+ - Add support for Whitenoise
+ - Add support for Sentry
+ - Add support for clean Heroku deploys
+ - Strip out things that are in config, but about which we are settled
