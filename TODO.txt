@@ -5,3 +5,4 @@
  - Add support for Sentry
  - Add support for clean Heroku deploys
  - Strip out things that are in config, but about which we are settled
+ - Add a docs docker service, to build and serve docs
