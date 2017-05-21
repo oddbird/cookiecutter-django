@@ -1,28 +1,16 @@
-Oddbirds Webapp Cookie Cutter
-=============================
+{{cookiecutter.project_name}}
+{{ '=' * cookiecutter.project_name|length }}
 
-Set up docker::
 
-    # Install Virtualbox
-    # install docker (brew install docker)
-    docker-machine up
-    eval $(docker-machine env)
+Set up docker, per
+``https://store.docker.com/editions/community/docker-ce-desktop-mac``.
 
-Cookie cutter project::
-
-    cookiecutter gh:oddbird/cookiecutter-django
-    # Answer prompts
-    cd <new-project>
-
-Copy env::
+Copy the ``.env`` file::
 
     mv env.example .env
-    # edit .env
 
-Make sure you can access docker machine ports::
-
-    docker-machine ip  # to get your docker vm's IP
-    # include that IP in your ``DJANGO_ALLOWED_HOSTS`` in .env
+You can also edit ``.env``, if you have any values that you know should
+be different.
 
 Build::
 
