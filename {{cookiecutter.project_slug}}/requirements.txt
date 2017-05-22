@@ -1,4 +1,5 @@
 Django
 psycopg2
+dj-database-url
 pytest
 Sphinx
