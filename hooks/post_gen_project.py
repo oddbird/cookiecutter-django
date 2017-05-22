@@ -14,7 +14,6 @@ utilities, specifically:
 """
 import os
 import random
-import shutil
 import string
 
 # Get the root project directory
@@ -106,14 +105,6 @@ def remove_heroku_files():
     remove_files(["Procfile", "runtime.txt"])
 
 
-def remove_docker_files():
-    """
-    Removes files needed for docker if it isn't going to be used
-    """
-    remove_files(["docker-compose.yml", ".dockerignore"])
-    shutil.rmtree(os.path.join(PROJECT_DIRECTORY, "compose"))
-
-
 def remove_gulp_files():
     """
     Removes files needed for Gulp if it isn't going to be used
@@ -144,41 +135,17 @@ def remove_open_source_files():
     remove_files(["CONTRIBUTORS.rst", "CONTRIBUTING.rst"])
 
 
-use_gulp = '{{ cookiecutter.js_task_runner }}'.lower() == 'gulp'
-use_docker = '{{ cookiecutter.use_docker }}'.lower() == 'y'
-use_heroku = '{{ cookiecutter.use_heroku }}'.lower() == 'y'
 use_gplv3 = '{{ cookiecutter.open_source_license}}' == 'GPLv3'
 not_oss = '{{ cookiecutter.open_source_license }}' == 'Not open source'
 
 # 1. Generates and saves random secret key
 make_secret_key(PROJECT_DIRECTORY)
 
-# 2. Removes all heroku files if it isn't going to be used
-if not use_heroku:
-    remove_heroku_files()
-
-# 3. Removes all docker files if it isn't going to be used
-if not use_docker:
-    remove_docker_files()
-
-# 4. Removes all JS task manager files if it isn't going to be used
-if not use_gulp:
-    remove_gulp_files()
-
-# 5. Display a warning if use_docker and use_gulp are selected. Gulp isn't
-#   supported by our docker config atm.
-if use_gulp and use_docker:
-    print(
-        "You selected to use docker and a JS task runner. This is NOT "
-        "supported out of the box for now. You can continue to use the "
-        "project like you normally would, but you will need to add a js task "
-        "runner service to your docker configuration manually."
-    )
-
-# 6. Removes files needed for the GPLv3 licence if it isn't going to be used.
+# 2. Removes files needed for the GPLv3 licence if it isn't going to be used.
 if not use_gplv3:
     remove_copying_files()
 
-# 7. Remove files conventional to opensource projects only.
+# 3. Remove files conventional to opensource projects only.
 if not_oss:
+    remove_copying_files()
     remove_open_source_files()
