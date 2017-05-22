@@ -1,4 +1,4 @@
-Oddbirds Webapp Cookie Cutter
+OddBird Web App Cookie Cutter
 =============================
 
 If you need to, install ``cookiecutter`` globally::

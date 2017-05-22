@@ -46,8 +46,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'{{cookiecutter.project_name}}'
-copyright = u'2017, Oddbird'
-author = u'Oddbird'
+copyright = u'2017, OddBird'
+author = u'OddBird'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -127,7 +127,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, '{{cookiecutter.project_name}}.tex', u'{{cookiecutter.project_name}} Documentation',
-     u'Oddbird', 'manual'),
+     u'OddBird', 'manual'),
 ]
 
 
