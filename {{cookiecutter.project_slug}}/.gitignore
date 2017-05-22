@@ -1,3 +1,21 @@
+TAGS
+*.DS_Store
+*~
+.livereload
+node_modules/
+jscov/
+jscov_temp/
+jscache/
+*.orig
+static/dist/
+*.swp
+*.swo
+*.css.map
+*.js.map
+npm-debug.log
+staticfiles/
+dump.rdb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
