@@ -24,6 +24,13 @@ services:
     volumes:
       - .:/app
 
+  js:
+    build:
+      context: .
+      dockerfile: ./compose/js/Dockerfile
+    volumes:
+      - .:/app
+
   nginx:
     build: ./compose/nginx
     depends_on:
