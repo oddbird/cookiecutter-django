@@ -10,17 +10,63 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os
+from os import environ
+from pathlib import Path
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(
-    os.path.dirname(
-        os.path.dirname(
-            os.path.abspath(__file__),
-        ),
-    ),
-)
+
+BOOLS = ('True', 'true', 'T', 't', '1', 1)
+
+
+class NoDefaultValue:
+    pass
+
+
+def env(name, default=NoDefaultValue, type_=str):
+    """
+    Get a configuration value from the environment.
+
+    Arguments
+    ---------
+    name : str
+        The name of the environment variable to pull from for this
+        setting.
+    default : any
+        A default value of the return type in case the intended
+        environment variable is not set. If this argument is not passed,
+        the environment variable is considered to be required, and
+        ``ImproperlyConfigured`` may be raised.
+    type_ : callable
+        A callable that takes a string and returns a value of the return
+        type.
+
+    Returns
+    -------
+    any
+        A value of the type returned by ``type_``.
+
+    Raises
+    ------
+    ImproperlyConfigured
+        If there is no ``default``, and the environment variable is not
+        set.
+    """
+    try:
+        val = environ[name]
+    except KeyError:
+        if default == NoDefaultValue:
+            raise ImproperlyConfigured(
+                f"Missing environment variable: {name}."
+            )
+        val = default
+    val = type_(val)
+    return val
+
+
+# Build paths inside the project like this: BASE_DIR.joinpath(...)
+BASE_DIR = Path(__file__).absolute().parent.parent.parent
+PROJECT_ROOT = BASE_DIR.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -30,12 +76,14 @@ BASE_DIR = os.path.dirname(
 SECRET_KEY = 'CHANGEME!!!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DJANGO_DEBUG', default=False, type_=lambda x: x in BOOLS)
+
+MODE = env('DJANGO_MODE', default='dev' if DEBUG else 'prod')
 
 ALLOWED_HOSTS = [
     el.strip()
     for el
-    in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+    in env('DJANGO_ALLOWED_HOSTS', default=[], type_=lambda x: x.split(','))
     if el.strip()
 ]
 
@@ -48,11 +96,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -138,4 +188,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = PROJECT_ROOT.joinpath('staticfiles')
+
+# if MODE == 'dev':
+#     static_dir_root = 'static/dist'
+# else:
+#     static_dir_root = 'static/dist/min'
+
+# Per the docs:
+# > Absolute path to a directory of files which will be served at the root of
+# > your application (ignored if not set).
+# Set this way, this lets us serve the styleguide relative to itself. If you
+# access the styleguide at `/styleguide/`, then the relative path asset
+# requests it makes will land in WhiteNoise, and get served appropriately,
+# given how the static directory is structured (with an internal `styleguide`
+# directory).
+# This comes at a cost, though:
+# > you won't benefit from cache versioning
+# WHITENOISE_ROOT = PROJECT_ROOT.joinpath(static_dir_root)
