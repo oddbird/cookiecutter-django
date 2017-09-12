@@ -1,4 +1,4 @@
-FROM node:7.7.3
+FROM node:8.5.0
 
 COPY ./package.json /package.json
 
